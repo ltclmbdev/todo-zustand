@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useTodoStore } from '@/store/todo-store-context'
 import TodoItem from './todo-item'
 import AddTodoForm from './add-todo-form'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function TodoList() {
   const { todos, addTodo, toggleTodo, deleteTodo } = useTodoStore()
@@ -35,18 +36,24 @@ export default function TodoList() {
     <div className="flex justify-center w-full">
       <div className="w-full max-w-2xl">
         <AddTodoForm onSubmit={handleAddTodo} />
-        <div className="border p-4">
-          <ul>
-            {todos.map(todo => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                toggleHandler={handleToggleTodo}
-                deleteHandler={handleDeleteTodo}
-              />
-            ))}
-          </ul>
-        </div>
+        <Card>
+          <CardContent className="min-h-64 p-4 flex justify-center">
+            {todos.length > 0 ? (
+              <ul className="w-full flex flex-col gap-4">
+                {todos.map(todo => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    toggleHandler={handleToggleTodo}
+                    deleteHandler={handleDeleteTodo}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <p className="self-center">There are no tasks yet.</p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

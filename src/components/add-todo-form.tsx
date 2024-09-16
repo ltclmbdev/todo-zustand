@@ -1,5 +1,8 @@
 import * as React from 'react'
 
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+
 interface AddTodoFormProps {
   onSubmit: (text: string) => void
 }
@@ -14,20 +17,15 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({ onSubmit }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex mb-4">
-      <input
+    <form onSubmit={handleSubmit} className="flex mb-4 gap-4">
+      <Input
         type="text"
         value={text}
         onChange={e => setText(e.target.value)}
-        placeholder="Enter a new todo"
+        placeholder="Add new task"
         className="flex-grow p-2 border rounded-l"
       />
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-500 text-white rounded-r"
-      >
-        Add Task
-      </button>
+      <Button variant="secondary">Add Task</Button>
     </form>
   )
 }
