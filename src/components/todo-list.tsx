@@ -8,6 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core'
 
 import {
@@ -64,13 +65,13 @@ export default function TodoList() {
     [deleteTodo]
   )
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       setDraggableItems(prevItems => {
         const oldIndex = prevItems.findIndex(item => item.id === active.id)
-        const newIndex = prevItems.findIndex(item => item.id === over.id)
+        const newIndex = prevItems.findIndex(item => item.id === over?.id)
 
         return arrayMove(prevItems, oldIndex, newIndex)
       })
