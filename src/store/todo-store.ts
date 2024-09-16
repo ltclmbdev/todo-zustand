@@ -19,12 +19,12 @@ export const createTodoStore = (initState: Partial<TodoStore> = {}) =>
     todos: [],
     ...initState,
     addTodo: text =>
-      set(state => ({
-        todos: [
-          ...state.todos,
-          { id: Date.now().toString(), text, completed: false },
-        ],
-      })),
+      set(state => {
+        const id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+        return {
+          todos: [...state.todos, { id, text, completed: false }],
+        }
+      }),
     toggleTodo: id =>
       set(state => ({
         todos: state.todos.map(todo =>
