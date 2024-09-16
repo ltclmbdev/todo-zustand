@@ -32,11 +32,3 @@ export function useTodoStore<T = TodoStore>(
   if (!store) throw new Error('Missing TodoStoreProvider')
   return selector ? store(selector) : store()
 }
-
-// export function useTodoStore(): TodoStore
-// export function useTodoStore<T>(selector: (store: TodoStore) => T): T
-// export function useTodoStore<T>(selector?: (store: TodoStore) => T) {
-//   const store = useContext(TodoStoreContext)
-//   if (!store) throw new Error('Missing TodoStoreProvider')
-//   return selector ? store(selector) : store()
-// }
