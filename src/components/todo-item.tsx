@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { Todo } from '@/store/todo-store'
-import { twMerge } from 'tailwind-merge'
-import { Card, CardContent } from '@/components/ui/card'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { type Todo } from '@/store/todo-store'
+import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { EllipsisVertical } from 'lucide-react'
+import { EllipsisVertical, GripVertical } from 'lucide-react'
 
 interface TodoItemProps {
   todo: Todo
@@ -26,8 +28,16 @@ const TodoItem: React.FC<TodoItemProps> = ({
   toggleHandler,
   deleteHandler,
 }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: todo.id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+  const isCursorGrabbing = attributes['aria-pressed']
+
   return (
-    <li>
+    <li ref={setNodeRef} style={style} key={todo.id}>
       <Card className="flex items-center space-x-2 p-4 shadow-none">
         <Checkbox
           id={todo.id}
@@ -35,17 +45,14 @@ const TodoItem: React.FC<TodoItemProps> = ({
           onCheckedChange={() => toggleHandler(todo.id)}
         />
         <span
-          className={twMerge(
-            'grow',
-            todo.completed && 'line-through text-gray-500'
-          )}
+          className={cn('grow', todo.completed && 'line-through text-gray-500')}
         >
           {todo.text}
         </span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="px-2">
-              <EllipsisVertical size="sm" />
+              <EllipsisVertical size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-32" align="end">
@@ -58,6 +65,17 @@ const TodoItem: React.FC<TodoItemProps> = ({
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Button
+          {...attributes}
+          {...listeners}
+          variant="outline"
+          className={cn(
+            'px-2',
+            isCursorGrabbing ? 'cursor-grabbing' : 'cursor-grab'
+          )}
+        >
+          <GripVertical size={16} />
+        </Button>
       </Card>
     </li>
   )
