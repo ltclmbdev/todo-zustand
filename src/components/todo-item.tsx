@@ -41,6 +41,10 @@ const TodoItem: React.FC<TodoItemProps> = ({
   }
   const isCursorGrabbing = attributes['aria-pressed']
 
+  const preventDefaultTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault()
+  }
+
   const handleEditClick = () => {
     setIsEditing(true)
   }
@@ -58,14 +62,21 @@ const TodoItem: React.FC<TodoItemProps> = ({
   }
 
   return (
-    <li ref={setNodeRef} style={style} key={todo.id}>
+    <li
+      ref={setNodeRef}
+      style={style}
+      key={todo.id}
+      className="touch-none select-none"
+      onTouchStart={preventDefaultTouchStart}
+    >
       <Card
         className={cn(
-          'flex items-center space-x-2 p-3 md:p-4 shadow-none rounded-sm duration-150 select-none text-sm md:text-base',
+          'flex items-center space-x-2 p-3 md:p-4 shadow-none rounded-sm duration-150 text-sm md:text-base touch-none',
           isCursorGrabbing
             ? 'border-dashed bg-slate-100 border-slate-300 dark:bg-zinc-900 dark:border-slate-600'
             : 'border'
         )}
+        onTouchStart={preventDefaultTouchStart}
       >
         <Checkbox
           id={todo.id}
@@ -107,9 +118,10 @@ const TodoItem: React.FC<TodoItemProps> = ({
         ) : (
           <span
             className={cn(
-              'grow select-none truncate',
+              'grow truncate select-none',
               todo.completed && 'line-through text-gray-500'
             )}
+            onTouchStart={preventDefaultTouchStart}
           >
             {todo.text}
           </span>
@@ -140,9 +152,10 @@ const TodoItem: React.FC<TodoItemProps> = ({
               {...listeners}
               variant="outline"
               className={cn(
-                'px-2 select-none',
+                'px-2 touch-none',
                 isCursorGrabbing ? 'cursor-grabbing' : 'cursor-grab'
               )}
+              onTouchStart={preventDefaultTouchStart}
             >
               <GripVertical size={16} />
             </Button>
