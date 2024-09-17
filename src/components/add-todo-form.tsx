@@ -26,7 +26,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({ onSubmit }) => {
         value={text}
         onChange={e => setText(e.target.value)}
         placeholder="New task"
-        className="flex-grow py-2 border rounded-l h-14 md:h-16 px-4 md:px-6 md:text-lg"
+        className="flex-grow py-2 border h-14 md:h-16 px-3 md:px-6 md:text-lg"
       />
       <Button className="md:text-lg px-6 h-auto">Add Task</Button>
     </form>
