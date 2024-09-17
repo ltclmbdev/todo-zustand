@@ -27,7 +27,7 @@ import { useTodoStore } from '@/store/todo-store-context'
 import TodoItem from './todo-item'
 import AddTodoForm from './add-todo-form'
 import { Card } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { LoaderCircle } from 'lucide-react'
 
 export default function TodoList() {
   const {
@@ -39,7 +39,8 @@ export default function TodoList() {
     reorderTodos,
     isHydrated,
   } = useTodoStore()
-  const [draggableItems, setDraggableItems] = React.useState<Todo[]>(todos)
+  const [draggableItems, setDraggableItems] = React.useState<Todo[]>([])
+  const [isLoading, setIsLoading] = React.useState(true)
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -78,8 +79,11 @@ export default function TodoList() {
   )
 
   React.useEffect(() => {
-    setDraggableItems(todos)
-  }, [todos])
+    if (isHydrated) {
+      setDraggableItems(todos)
+      setIsLoading(false)
+    }
+  }, [isHydrated, todos])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -99,7 +103,9 @@ export default function TodoList() {
       <div className="w-full max-w-2xl">
         <AddTodoForm onSubmit={handleAddTodo} />
         <Card className="shadow-none rounded-sm p-3 md:p-4 flex justify-center min-h-64">
-          {draggableItems.length > 0 ? (
+          {isLoading ? (
+            <LoaderCircle className="h-8 w-8 animate-spin self-center" />
+          ) : draggableItems.length > 0 ? (
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -123,10 +129,8 @@ export default function TodoList() {
                 </ul>
               </SortableContext>
             </DndContext>
-          ) : isHydrated ? (
-            <p className="self-center">There are no tasks yet.</p>
           ) : (
-            <Loader2 className="h-8 w-8 animate-spin self-center" />
+            <p className="self-center">There are no tasks yet.</p>
           )}
         </Card>
       </div>
