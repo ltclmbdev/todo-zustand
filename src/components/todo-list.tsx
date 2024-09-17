@@ -82,7 +82,7 @@ export default function TodoList() {
     <div className="flex justify-center w-full">
       <div className="w-full max-w-2xl">
         <AddTodoForm onSubmit={handleAddTodo} />
-        <Card className="shadow-none">
+        <Card className="shadow-none rounded-sm">
           <CardContent className="min-h-64 p-4 flex justify-center">
             {draggableItems.length > 0 ? (
               <DndContext
