@@ -27,9 +27,18 @@ import { useTodoStore } from '@/store/todo-store-context'
 import TodoItem from './todo-item'
 import AddTodoForm from './add-todo-form'
 import { Card } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
 
 export default function TodoList() {
-  const { todos, addTodo, toggleTodo, deleteTodo, editTodo } = useTodoStore()
+  const {
+    todos,
+    addTodo,
+    toggleTodo,
+    deleteTodo,
+    editTodo,
+    reorderTodos,
+    isHydrated,
+  } = useTodoStore()
   const [draggableItems, setDraggableItems] = React.useState<Todo[]>(todos)
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -76,12 +85,12 @@ export default function TodoList() {
     const { active, over } = event
 
     if (active.id !== over?.id) {
-      setDraggableItems(prevItems => {
-        const oldIndex = prevItems.findIndex(item => item.id === active.id)
-        const newIndex = prevItems.findIndex(item => item.id === over?.id)
+      const oldIndex = todos.findIndex(item => item.id === active.id)
+      const newIndex = todos.findIndex(item => item.id === over?.id)
 
-        return arrayMove(prevItems, oldIndex, newIndex)
-      })
+      const newOrder = arrayMove(todos, oldIndex, newIndex)
+      setDraggableItems(newOrder)
+      reorderTodos(newOrder)
     }
   }
 
@@ -114,8 +123,10 @@ export default function TodoList() {
                 </ul>
               </SortableContext>
             </DndContext>
-          ) : (
+          ) : isHydrated ? (
             <p className="self-center">There are no tasks yet.</p>
+          ) : (
+            <Loader2 className="h-8 w-8 animate-spin self-center" />
           )}
         </Card>
       </div>
